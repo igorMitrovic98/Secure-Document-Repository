@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button fx:id="btnRetrieve" layoutX="85.0" layoutY="305.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="85.0" text="Retrieve" />
+      <Button fx:id="btnUpload" layoutX="434.0" layoutY="305.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="79.0" text="Upload" />
+      <ListView fx:id="lwFiles" layoutX="55.0" layoutY="64.0" prefHeight="200.0" prefWidth="494.0" />
+      <Label fx:id="lblFileName" layoutX="330.0" layoutY="277.0" prefHeight="18.0" prefWidth="248.0" />
+      <Label fx:id="lblTmp" layoutX="265.0" layoutY="31.0" prefHeight="18.0" prefWidth="119.0" />
+      <Button fx:id="btnConfirm" layoutX="480.0" layoutY="361.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Confirm" />
+   </children>
+</AnchorPane>

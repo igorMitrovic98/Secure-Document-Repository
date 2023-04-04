@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="324.0" prefWidth="396.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button fx:id="btnSIgnUp" layoutX="19.0" layoutY="264.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="69.0" text="Sign Up" />
+      <Button fx:id="btnContinue" layoutX="247.0" layoutY="264.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="70.0" text="Continue" />
+      <Label layoutX="13.0" layoutY="18.0" prefHeight="54.0" prefWidth="122.0" text="Dont have an account? Sign up here!" textAlignment="CENTER" wrapText="true" />
+      <Label layoutX="222.0" layoutY="62.0" text="Please insert your certificate!" textAlignment="CENTER" wrapText="true" />
+      <TextField fx:id="txtUsername" layoutX="14.0" layoutY="89.0" />
+      <Label layoutX="18.0" layoutY="71.0" text="Username:" />
+      <Label layoutX="20.0" layoutY="159.0" text="Password:" />
+      <PasswordField fx:id="txtPassword" layoutX="14.0" layoutY="176.0" />
+      <Button fx:id="btnInsert" layoutX="255.0" layoutY="176.0" mnemonicParsing="false" text="Insert" />
+      <Button fx:id="btnClose" layoutX="336.0" layoutY="20.0" mnemonicParsing="false" text="Close" />
+      <Label fx:id="lblCert" layoutX="194.0" layoutY="121.0" prefHeight="38.0" prefWidth="176.0" wrapText="true" />
+      <Label layoutX="19.0" layoutY="211.0" text="Repeat Password:" />
+      <PasswordField fx:id="txtRepeat" layoutX="15.0" layoutY="229.0" />
+      <Label fx:id="lblCorrect" layoutX="101.0" layoutY="264.0" prefHeight="38.0" prefWidth="114.0" wrapText="true" />
+      <Label fx:id="lblExist" layoutX="20.0" layoutY="121.0" prefHeight="38.0" prefWidth="135.0" wrapText="true" />
+      <Label fx:id="lblTmp" layoutX="184.0" layoutY="12.0" />
+      <Label fx:id="lblVerify" layoutX="222.0" layoutY="220.0" prefHeight="26.0" prefWidth="135.0" />
+   </children>
+</AnchorPane>
