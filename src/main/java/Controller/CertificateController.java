@@ -32,6 +32,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.Set;
 
 public class CertificateController{
 
@@ -49,18 +50,13 @@ public class CertificateController{
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(KEY_ALGORITHM, BC_PROVIDER);
         keyPairGenerator.initialize(2048);
 
-        // Setup start date to yesterday and end date for 1 year validity
+        // Setup start date to yesterday and end date for 60 days validity
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, -1);
         Date startDate = calendar.getTime();
 
-        calendar.add(Calendar.DATE, 60);
+        calendar.add(Calendar.DATE, 183);
         Date endDate = calendar.getTime();
-
-        //File badCert = new File("C:\\Users\\admin\\IdeaProjects\\untitled\\domain.crt");
-        //CertificateFactory fact1 = CertificateFactory.getInstance("X.509");
-        //FileInputStream crt = new FileInputStream (badCert);
-        //X509Certificate Bad = (X509Certificate) fact1.generateCertificate(crt);
 
 
         File privateKeyFile = new File("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\private\\caDER.key");
@@ -104,8 +100,7 @@ public class CertificateController{
         PKCS10CertificationRequest csr = p10Builder.build(csrContentSigner);
 
         // Use the Signed KeyPair and CSR to generate an issued Certificate
-        // Here serial number is randomly generated. In general, CAs use
-        // a sequence to generate Serial number and avoid collisions
+
         X509v3CertificateBuilder issuedCertBuilder = new X509v3CertificateBuilder(dirName, number, startDate, endDate, csr.getSubject(), csr.getSubjectPublicKeyInfo());
 
         JcaX509ExtensionUtils issuedCertExtUtils = new JcaX509ExtensionUtils();
@@ -175,16 +170,24 @@ public class CertificateController{
         X509CRLHolder crlHolder = new X509CRLHolder(asn1Stream);
         asn1Stream.close();
         X509CRL existingCRL = new JcaX509CRLConverter().getCRL(crlHolder);
+        System.out.println(existingCRL);
+        Set<? extends java.security.cert.X509CRLEntry> revokedCertificates = existingCRL.getRevokedCertificates();
+
+
 
         //X509CRLHolder existingCRL = new X509CRLHolder(inputCRL);
         // Create a new CRL builder
         X509v2CRLBuilder crlBuilder = new X509v2CRLBuilder(crlHolder.getIssuer(), new Date());
         // Create a new CRL entry for the revoked certificate
         X509CertificateHolder revokedCertificate = new X509CertificateHolder(org.bouncycastle.asn1.x509.Certificate.getInstance(usercert.getEncoded()));
+        for (java.security.cert.X509CRLEntry entry : revokedCertificates) {
+            crlBuilder.addCRLEntry(entry.getSerialNumber(),entry.getRevocationDate(),entry.getRevocationReason().ordinal());
+        }
         crlBuilder.addCRLEntry(revokedCertificate.getSerialNumber(), new Date(), CRLReason.certificateHold);
         // Sign the new CRL with the CA's private key
         X509CRLHolder newCRL = crlBuilder.build(new JcaContentSignerBuilder("SHA256withRSA").build(priv));
         X509CRL CRLNew = new JcaX509CRLConverter().getCRL(newCRL);
+
 
         System.out.println(CRLNew);
 

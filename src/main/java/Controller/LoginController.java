@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import net.i2p.crypto.CertUtil;
 
@@ -31,6 +32,7 @@ public class LoginController implements Initializable{
 
     X509Certificate userCertificate;
     X509Certificate CA;
+    FileController fileController = new FileController();
     int attempts = 0;
     LoginController(X509Certificate certificate,X509Certificate CA){
 
@@ -55,6 +57,13 @@ public class LoginController implements Initializable{
 
     @FXML
     private TextField txtUser;
+    @FXML
+    private Button btnClose;
+    @FXML
+    void BtnCloseClick(ActionEvent event) {
+        ((Stage) btnClose.getScene().getWindow()).close();
+
+    }
 
 
 
@@ -100,7 +109,8 @@ public class LoginController implements Initializable{
                             certificateController.unrevokeCert(userCertificate);
                             l++;
                         }
-
+                    //decrypting file with files
+                    fileController.decryptFile();
                     //open User Interface form
                     UserInterfaceController userInterfaceController = new UserInterfaceController(username,password);
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/UserInterface.fxml"));
@@ -111,6 +121,7 @@ public class LoginController implements Initializable{
                     stage.setTitle("UserInterface");
                     stage.setScene(scene);
                     stage.setResizable(false);
+                    stage.initStyle(StageStyle.UNDECORATED);
                     stage.setOnCloseRequest((WindowEvent e) -> {
                         System.exit(0);
                     });
@@ -141,6 +152,7 @@ public class LoginController implements Initializable{
                     stage.setTitle("FileSystem");
                     stage.setScene(scene);
                     stage.setResizable(false);
+                    stage.initStyle(StageStyle.UNDECORATED);
                     ((Stage) btnLogin.getScene().getWindow()).close();
                     stage.show();
         }
@@ -167,6 +179,7 @@ public class LoginController implements Initializable{
     }
 
 
+
     @Override
     public void initialize(URL url, ResourceBundle rb){
         String commonName = (userCertificate.getSubjectDN().toString());
@@ -179,6 +192,7 @@ public class LoginController implements Initializable{
             throw new RuntimeException(e);
         }
     });
+    btnClose.setOnAction(event -> BtnCloseClick(event));
     }
 
 

@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import net.i2p.crypto.CertUtil;
 
@@ -70,7 +71,8 @@ public class RegistrationController implements Initializable {
     private Label lblVerify;
 
     @FXML
-    void BtnCloseClick(ActionEvent event) {
+    void BtnCloseClick(ActionEvent event)throws Exception {
+        fileController.encryptFile();
         ((Stage) btnClose.getScene().getWindow()).close();
 
     }
@@ -82,6 +84,7 @@ public class RegistrationController implements Initializable {
         btnInsert.setDisable(true);
         lblTmp.setText(file.getAbsolutePath());
         lblTmp.setVisible(false);
+        btnContinue.setDisable(false);
 
     }
 
@@ -117,6 +120,10 @@ public class RegistrationController implements Initializable {
             //check if date and issuer are valid
             cert.checkValidity();
             cert.verify(Cacert.getPublicKey());
+            if(cert.equals(Cacert)){
+                Exception exception = new Exception();
+                throw exception;
+            }
             System.out.println("Verified OK");
             //open login form
             LoginController loginController = new LoginController(cert,Cacert);
@@ -128,6 +135,7 @@ public class RegistrationController implements Initializable {
             stage.setTitle("LoginForm");
             stage.setScene(scene);
             stage.setResizable(false);
+            stage.initStyle(StageStyle.UNDECORATED);
             stage.setOnCloseRequest((WindowEvent e) -> { System.exit(0);});
             ((Stage) btnContinue.getScene().getWindow()).close();
             stage.show();
@@ -139,6 +147,7 @@ public class RegistrationController implements Initializable {
             lblTmp.setText("");
             lblCert.setText("");
             btnInsert.setDisable(false);
+            btnContinue.setDisable(true);
 
         }
     }}
@@ -154,8 +163,6 @@ public class RegistrationController implements Initializable {
         String password = txtPassword.getText();
         ArrayList<String> lista = new ArrayList<>();
         CertificateController userCert = new CertificateController();
-//        fileController.encryptFile();
-//      fileController.decryptFile();
         if(!password.equals(txtRepeat.getText())){
             lblCorrect.setText("Passwords are not equal!");
             return;}
@@ -209,7 +216,7 @@ public class RegistrationController implements Initializable {
             e.printStackTrace();
         }
 
-       //btnSIgnUp.setDisable(true);
+       btnSIgnUp.setDisable(true);
 
     }
 
@@ -217,7 +224,13 @@ public class RegistrationController implements Initializable {
     @Override
     public void initialize (URL url, ResourceBundle rb) {
 
-    btnClose.setOnAction(this::BtnCloseClick);
+    btnClose.setOnAction(event1 -> {
+        try {
+            BtnCloseClick(event1);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    });
     btnSIgnUp.setOnAction(event -> {
         try {
             btnSIgnUpClicked(event);
@@ -239,6 +252,7 @@ public class RegistrationController implements Initializable {
             throw new RuntimeException(e);
         }
     });
+
     }
 
      private static Random random = new Random();
@@ -254,6 +268,7 @@ public class RegistrationController implements Initializable {
         return list.get(randomItem);
     }
 
+
     public String encryptPassword(String password) throws NoSuchAlgorithmException{
 
         MessageDigest md = MessageDigest.getInstance(randomString());
@@ -262,5 +277,6 @@ public class RegistrationController implements Initializable {
         return bigInteger.toString(16);
 
     }
+
 
 }

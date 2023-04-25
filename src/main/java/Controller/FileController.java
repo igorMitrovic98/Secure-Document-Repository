@@ -6,19 +6,17 @@ import javafx.stage.FileChooser.ExtensionFilter;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Key;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.security.MessageDigest;
+import java.util.*;
 
 
 public class FileController {
+
 
     @FXML
     String SingleFileChooser() throws NullPointerException{
@@ -109,8 +107,9 @@ public class FileController {
             e.printStackTrace();
         }
     }
-    public void writeNewFileIntoFile(String fileName,String username){
+    public void writeNewFileIntoFile(String fileName,String username,String digitalPrint)throws Exception{
         File file = new File("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\files.txt");
+        boolean condition = ifFileNameExists(file,fileName,username);
         ArrayList<String> lista = new ArrayList<>();
         ArrayList<String> lista2 = new ArrayList<>();
         try{
@@ -122,7 +121,7 @@ public class FileController {
                 }
                 else break;
             }
-            System.out.println(lista);
+            //System.out.println(lista);
             scanner.close();
 
         } catch (FileNotFoundException e)
@@ -138,23 +137,25 @@ public class FileController {
                     }
                 }
             }
-            System.out.println(lista2);
+            //System.out.println(lista2);
             scanner.close();
 
         } catch (FileNotFoundException e)
         {
             e.printStackTrace();
         }
-
         try {
             PrintStream p = new PrintStream(file);
 
             for(String string : lista) {
                 p.println(string);
             }
-
+            //System.out.println(fileName);
             p.println(username);
-            p.println(fileName);
+            if (!condition) {
+                p.println(fileName);
+                p.println(digitalPrint);
+            }
             for(String string : lista2) {
                 p.println(string);
             }
@@ -162,6 +163,167 @@ public class FileController {
         }catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-    }
+
+
     }
 
+
+    public void storeFileIntoSystem(File file) throws Exception{
+
+    }
+
+    private static Random random = new Random();
+    public Integer randomInteger(){
+
+        List<Integer> list = new ArrayList<>();
+        list.add(4);
+        list.add(5);
+        list.add(6);
+        list.add(7);
+        list.add(8);
+        int randomItem = random.nextInt(list.size());
+        return list.get(randomItem);
+    }
+    public byte[] UserKeyTo32byte(byte[] originalKey,String fileName) throws Exception{
+        byte [] name = fileName.getBytes();
+        byte[] userKey= Arrays.copyOf(originalKey,(32 - name.length));
+        byte[] combined = new byte[userKey.length + name.length];
+        System.arraycopy(userKey, 0, combined, 0, userKey.length);
+        System.arraycopy(name, 0, combined, userKey.length, name.length);
+        return combined;
+    }
+    public void encryptUserFile(byte[] inputBytes,Integer n,Key secretKey,File file,String username) throws Exception {
+        // Create a cipher instance for encryption
+        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+
+        // Encrypt the input bytes
+        byte[] encryptedBytes = cipher.doFinal(inputBytes);
+        Integer tmp = n+1;
+        // Write the encrypted bytes to an output file
+        Path outputFile = Paths.get("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\"+tmp+"\\"+FileNameHash(username+file.getName()+tmp));
+        Files.write(outputFile, encryptedBytes);
+
+        System.out.println("File encrypted successfully.");
+    }
+
+    public byte[] decryptUserFile(Key secretKey,byte[] inputBytes) throws Exception {
+        try {
+
+            // Create a cipher instance for encryption
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+//        byte[] iv = new byte[cipher.getBlockSize()];
+//        SecureRandom random = new SecureRandom();
+//        random.nextBytes(iv);
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+
+            // Decrypt the input bytes
+            System.out.println("File decrypted successfully.");
+            return cipher.doFinal(inputBytes);
+        }catch (Exception e){
+            System.out.println("Error during decryption: " + e.getMessage());
+            return inputBytes;
+        }
+
+    }
+    public static byte[] combineFiles(File[] files) throws IOException {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            for (File file : files) {
+                try (FileInputStream fis = new FileInputStream(file)) {
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = fis.read(buffer)) != -1) {
+                        baos.write(buffer, 0, bytesRead);
+                    }
+                }
+            }
+            return baos.toByteArray();
+        }
+    }
+    public boolean ifFileNameExists(File file,String fileName,String username) throws Exception {
+        Scanner scanner = new Scanner(file);
+        String line;
+        boolean foundUsername = false;
+        boolean foundFile = false;
+        while (scanner.hasNextLine()) {
+            line = scanner.nextLine().trim();
+            if (line.equals(username)) {
+                System.out.println("Found username: " + username);
+                foundUsername = true;
+                continue;
+            }
+            else
+            if (foundUsername && line.equals("#")) {
+                System.out.println("Found delimiter");
+                break;
+            }
+            else
+            if (foundUsername && line.equals(fileName)) {
+                System.out.println("Found file: " + fileName);
+                foundFile = true;
+                break;
+            }
+        }
+        scanner.close();
+        return foundFile;
+    }
+    public String calculateFileHash(File file,String username)throws Exception{
+
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        FileInputStream fis = new FileInputStream(file);
+        byte[] dataBytes = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = fis.read(dataBytes)) != -1) {
+            md.update(dataBytes, 0, bytesRead);
+        }
+        byte[] mdBytes = md.digest();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < mdBytes.length; i++) {
+            sb.append(Integer.toString((mdBytes[i] & 0xff) + 0x100, 16).substring(1));
+        }
+        return sb.toString();
+    }
+    public String findFileHash(String fileName,String username){
+        File file = new File("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\files.txt");
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        String line;
+        boolean foundUsername = false;
+        while (scanner.hasNextLine()) {
+            line = scanner.nextLine().trim();
+            if (line.equals(username)) {
+                System.out.println("Found username: " + username);
+                foundUsername = true;
+                continue;
+            }
+            if (foundUsername && line.equals("#")) {
+                System.out.println("Found delimiter");
+                break;
+            }
+            if (foundUsername && line.equals(fileName)) {
+                System.out.println("Found file: " + fileName);
+                String print = scanner.nextLine();
+                System.out.println(print);
+               return print;
+            }
+        }
+        scanner.close();
+        return "";
+    }
+    public String FileNameHash(String filename){
+        int hash = Objects.hash(filename);
+        return Integer.toHexString(hash);
+    }
+
+    public void privateKeyRSA(String username,String password)throws Exception{
+        Process p;
+        String command = "openssl rsa -in .\\root\\certs\\"+username+"Key.key -inform PEM -outform DER -out .\\root\\certs\\"+username+"Key1.key -passin pass:"+
+                password;
+        Runtime runtime = Runtime.getRuntime();
+        p=runtime.exec(command);
+    }
+}

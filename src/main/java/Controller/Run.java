@@ -2,15 +2,10 @@ package Controller;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.scene.Parent;
-import java.net.URL;
-
-import javafx.stage.WindowEvent;
-import Controller.RegistrationController;
-
-import java.io.IOException;
+import javafx.stage.StageStyle;
 
 public class Run extends Application {
 
@@ -26,6 +21,7 @@ public class Run extends Application {
             stage.setTitle("FileSystem");
             stage.setScene(scene);
             stage.setResizable(false);
+            stage.initStyle(StageStyle.UNDECORATED);
             stage.show();
 
 

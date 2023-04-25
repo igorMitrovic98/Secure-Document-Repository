@@ -13,5 +13,7 @@
       <Label fx:id="lblFileName" layoutX="330.0" layoutY="277.0" prefHeight="18.0" prefWidth="248.0" />
       <Label fx:id="lblTmp" layoutX="265.0" layoutY="31.0" prefHeight="18.0" prefWidth="119.0" />
       <Button fx:id="btnConfirm" layoutX="480.0" layoutY="361.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="Confirm" />
+      <Button fx:id="btnClose" layoutX="460.0" layoutY="19.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="79.0" text="Close" />
+      <Label fx:id="lblMsg" layoutX="55.0" layoutY="11.0" prefHeight="42.0" prefWidth="268.0" wrapText="true" />
    </children>
 </AnchorPane>
