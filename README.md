@@ -6,14 +6,14 @@ This Java application serves as a secure repository for storing confidential doc
 
 ### Certificate Validation:
 
-  -Users enter their digital certificate during the first step of login.
-  -Valid certificates grant access to the second step.
+  - Users enter their digital certificate during the first step of login.
+  - Valid certificates grant access to the second step.
   
 ### Username and Password Authentication:
 
-  -Users input their username and password after successful certificate validation.
-  -Three consecutive failed attempts result in automatic suspension of the user's certificate.
-  -Suspended users can reactivate their certificate by entering correct credentials or register a new account.
+  - Users input their username and password after successful certificate validation.
+  - Three consecutive failed attempts result in automatic suspension of the user's certificate.
+  - Suspended users can reactivate their certificate by entering correct credentials or register a new account.
 
 ### Document Access:
 
@@ -23,52 +23,52 @@ This Java application serves as a secure repository for storing confidential doc
 
 ### Document Upload:
 
-  -Users can upload new documents.
-  -Each new document is divided into N segments (N≥4, randomly generated), and each segment is stored in a different directory for enhanced security.
+  - Users can upload new documents.
+  - Each new document is divided into N segments (N≥4, randomly generated), and each segment is stored in a different directory for enhanced security.
 
 ### Document Download:
 
-  -Users can download existing documents.
-  -The application ensures the confidentiality and integrity of each document segment.
+  - Users can download existing documents.
+  - The application ensures the confidentiality and integrity of each document segment.
 
 ### Document Integrity Check:
 
-  -The application detects any unauthorized modification of stored documents.
-  -Users are notified of such attempts during the download process.
+  - The application detects any unauthorized modification of stored documents.
+  - Users are notified of such attempts during the download process.
   
 ## Public Key Infrastructure (PKI)
 
 ### Certificate Authority (CA):
 
-  -A CA issues all certificates used in the application.
-  -CA certificate, Certificate Revocation List (CRL), user certificates, and the private key of the currently logged-in user are stored in a specified file system location.
+  - A CA issues all certificates used in the application.
+  - CA certificate, Certificate Revocation List (CRL), user certificates, and the private key of the currently logged-in user are stored in a specified file system location.
 
 ### Certificate Limitations:
 
-  -Certificates are restricted to application-specific purposes.
-  -Certificate data is associated with the corresponding user details.
-  -User certificates are valid for a period of 6 months.
+  - Certificates are restricted to application-specific purposes.
+  - Certificate data is associated with the corresponding user details.
+  - User certificates are valid for a period of 6 months.
 
 ## Implementation Details
 
 ### File System Structure:
 
-  -Directories for each document segment.
-  -Storage of CA certificate, CRL, user certificates, and private keys.
+  - Directories for each document segment.
+  - Storage of CA certificate, CRL, user certificates, and private keys.
 
 ### Security Measures:
 
-  -Encryption and decryption of document segments.
-  -Detection and notification of unauthorized document modifications.
+  - Encryption and decryption of document segments.
+  - Detection and notification of unauthorized document modifications.
 
 ### User Interface:
 
-  -JavaFX-based graphical user interface.
-  -Display of document lists and notifications.
+  - JavaFX-based graphical user interface.
+  - Display of document lists and notifications.
 
 ### Logging and Exception Handling:
 
-  -Utilization of a Logger class for efficient exception handling.
+  - Utilization of a Logger class for efficient exception handling.
 
 ## Running the Application
 
