@@ -17,7 +17,7 @@ This Java application serves as a secure repository for storing confidential doc
 
 ### Document Access:
 
-  -Upon successful authentication, users have access to an interface displaying a list of their documents.
+  - Upon successful authentication, users have access to an interface displaying a list of their documents.
 
 ## Document Management
 
