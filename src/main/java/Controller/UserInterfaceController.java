@@ -120,14 +120,14 @@ public class UserInterfaceController implements Initializable {
     void btnRetrieveClicked() throws Exception{
         String fileName = lwFiles.getSelectionModel().getSelectedItem();
         File outputFile = new File("C:\\Users\\admin\\Desktop\\KriptoFiles\\"+fileName);
-        byte[] key = ("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\" + username + "Key.key").getBytes();
+        byte[] key = (System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator + username + "Key.key").getBytes();
         Key secretKey = new SecretKeySpec(fileController.UserKeyTo32byte(key, fileName), "AES");
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         for(int i = 0; i < 8; i++){
             Integer tmp = i+1;
             try{
-            Path filePath = Paths.get("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\"+tmp+"\\"+fileController.FileNameHash(username+fileName+tmp));
+            Path filePath = Paths.get(System.getProperty("user.dir")+File.separator+"root"+File.separator+tmp+File.separator+fileController.FileNameHash(username+fileName+tmp));
             byte[] inputBytes = Files.readAllBytes(filePath);
             byte[] decryptedBytes = fileController.decryptUserFile(secretKey,inputBytes);
 
@@ -212,7 +212,7 @@ public class UserInterfaceController implements Initializable {
     }
 
     public void initializeListView(String username)throws Exception{
-        File file = new File("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\files.txt");
+        File file = new File(System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"files.txt");
         ArrayList<String> list = new ArrayList<>();
         Scanner scanner = null;
         boolean process = false;

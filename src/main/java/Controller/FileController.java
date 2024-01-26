@@ -34,9 +34,9 @@ public class FileController {
 
     public void encryptFile() throws Exception {
         // Read the input file as bytes
-        Path inputFile = Paths.get("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\files.txt");
+        Path inputFile = Paths.get(System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"files.txt");
         byte[] inputBytes = Files.readAllBytes(inputFile);
-        byte[] key = "C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\private\\caDER.key".getBytes();
+        byte[] key = (System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"priv"+File.separator+"caDER.key").getBytes();
         // Generate a secret key
         Key secretKey = new SecretKeySpec(keyTo32byte(key), "AES");
 
@@ -48,7 +48,7 @@ public class FileController {
         byte[] encryptedBytes = cipher.doFinal(inputBytes);
 
         // Write the encrypted bytes to an output file
-        Path outputFile = Paths.get("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\files.txt");
+        Path outputFile = Paths.get(System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+File.separator+"files.txt");
         Files.write(outputFile, encryptedBytes);
 
         System.out.println("File encrypted successfully.");
@@ -56,9 +56,9 @@ public class FileController {
 
     public void decryptFile() throws Exception {
         // Read the encrypted file as bytes
-        Path inputFile = Paths.get("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\files.txt");
+        Path inputFile = Paths.get(System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"files.txt");
         byte[] inputBytes = Files.readAllBytes(inputFile);
-        byte[] key = "C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\private\\caDER.key".getBytes();
+        byte[] key = (System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"priv"+File.separator+"caDER.key").getBytes();
         // Generate a secret key
         Key secretKey = new SecretKeySpec(keyTo32byte(key), "AES");
 
@@ -70,7 +70,7 @@ public class FileController {
         byte[] decryptedBytes = cipher.doFinal(inputBytes);
 
         // Write the decrypted bytes to an output file
-        Path outputFile = Paths.get("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\files.txt");
+        Path outputFile = Paths.get(System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"files.txt");
         Files.write(outputFile, decryptedBytes);
 
         System.out.println("File decrypted successfully.");
@@ -79,7 +79,7 @@ public class FileController {
         return Arrays.copyOf(originalKey,32);
     }
     public void writeNewUserIntoFiles(String username) throws Exception{
-        File file = new File("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\files.txt");
+        File file = new File(System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"files.txt");
         ArrayList<String> lista = new ArrayList<>();
         try{
             Scanner scanner = new Scanner(file);
@@ -108,7 +108,7 @@ public class FileController {
         }
     }
     public void writeNewFileIntoFile(String fileName,String username,String digitalPrint)throws Exception{
-        File file = new File("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\files.txt");
+        File file = new File(System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"files.txt");
         boolean condition = ifFileNameExists(file,fileName,username);
         ArrayList<String> lista = new ArrayList<>();
         ArrayList<String> lista2 = new ArrayList<>();
@@ -201,7 +201,7 @@ public class FileController {
         byte[] encryptedBytes = cipher.doFinal(inputBytes);
         Integer tmp = n+1;
         // Write the encrypted bytes to an output file
-        Path outputFile = Paths.get("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\"+tmp+"\\"+FileNameHash(username+file.getName()+tmp));
+        Path outputFile = Paths.get(System.getProperty("user.dir")+File.separator+"root"+File.separator+tmp+File.separator+FileNameHash(username+file.getName()+tmp));
         Files.write(outputFile, encryptedBytes);
 
         System.out.println("File encrypted successfully.");
@@ -212,9 +212,6 @@ public class FileController {
 
             // Create a cipher instance for encryption
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-//        byte[] iv = new byte[cipher.getBlockSize()];
-//        SecureRandom random = new SecureRandom();
-//        random.nextBytes(iv);
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
 
             // Decrypt the input bytes
@@ -284,7 +281,7 @@ public class FileController {
         return sb.toString();
     }
     public String findFileHash(String fileName,String username){
-        File file = new File("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\files.txt");
+        File file = new File(System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"files.txt");
         Scanner scanner = null;
         try {
             scanner = new Scanner(file);

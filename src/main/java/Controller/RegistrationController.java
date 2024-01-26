@@ -94,7 +94,7 @@ public class RegistrationController implements Initializable {
         //certificateController.createCRL();
         //finding ca cert
         CertificateFactory factory = CertificateFactory.getInstance("X.509");
-        File CAcertificate = new File("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\ca.crt");
+        File CAcertificate = new File(System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"ca.crt");
         FileInputStream input = new FileInputStream(CAcertificate);
         X509Certificate Cacert = (X509Certificate) factory.generateCertificate(input);
 
@@ -106,7 +106,7 @@ public class RegistrationController implements Initializable {
         FileInputStream input1 = new FileInputStream(filePath.replace("\\","\\\\"));
         X509Certificate cert = (X509Certificate)factory1.generateCertificate(input1);
         //check if certificate is revoked
-        File crlFile = new File("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\crl\\CRL1.crl");
+        File crlFile = new File(System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"crl"+File.separator+"CRL1.crl");
         FileInputStream fileInputStream = new FileInputStream(crlFile);
         X509CRL CRL = CertUtil.loadCRL(fileInputStream);
         if(CRL.getRevokedCertificate(cert.getSerialNumber()) != null){
@@ -158,7 +158,8 @@ public class RegistrationController implements Initializable {
         if(txtUsername.getText().isEmpty() || txtPassword.getText().isEmpty() || txtRepeat.getText().isEmpty())
             return;
 
-        File file = new File("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\database\\baza.txt");
+        File file = new File(System.getProperty("user.dir")+File.separator+"database"+File.separator+"baza.txt");
+
         String username = txtUsername.getText();
         String password = txtPassword.getText();
         ArrayList<String> lista = new ArrayList<>();

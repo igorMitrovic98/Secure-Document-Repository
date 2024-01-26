@@ -71,7 +71,7 @@ public class LoginController implements Initializable{
     void btnLoginClicked(ActionEvent event) throws Exception{
 
 
-        File crlFile = new File("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\crl\\CRL1.crl");
+        File crlFile = new File(System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"crl"+File.separator+"CRL1.crl");
         FileInputStream fileInputStream = new FileInputStream(crlFile);
         X509CRL CRL = CertUtil.loadCRL(fileInputStream);
 

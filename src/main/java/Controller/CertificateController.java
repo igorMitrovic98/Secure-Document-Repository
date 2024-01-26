@@ -59,12 +59,12 @@ public class CertificateController{
         Date endDate = calendar.getTime();
 
 
-        File privateKeyFile = new File("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\private\\caDER.key");
+        File privateKeyFile = new File(System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"priv"+File.separator+"caDER.key");
         byte[] privateKeyBytes = Files.readAllBytes(privateKeyFile.toPath());
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
         PrivateKey priv = keyFactory.generatePrivate(privateKeySpec);
-        File CA = new File( "C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\ca.crt");
+        File CA = new File( System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"ca.crt");
 
 
         CertificateFactory fact = CertificateFactory.getInstance("X.509");
@@ -75,7 +75,7 @@ public class CertificateController{
         KeyPair CAkey = new KeyPair(pub,priv);
         X500Name dirName = new X500Name(CAcer.getSubjectDN().getName());
 
-        File serialNumber = new File("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\serial.txt");
+        File serialNumber = new File(System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"serial.txt");
         Scanner scanner = new Scanner(serialNumber);
         // getting serial number from file
         BigInteger number = new BigInteger(scanner.nextLine());
@@ -123,7 +123,6 @@ public class CertificateController{
         // Verify the issued cert signature against the root (issuer) cert
         issuedCert.verify(CAcer.getPublicKey(), BC_PROVIDER);
 
-        //writeCertToFileBase64Encoded(issuedCert,"C:\\Users\\admin\\Desktop\\KriptoCerts\\"+username+".crt");
         exportKeyPairToKeystoreFile(issuedCertKeyPair,  issuedCert, username, username+".pfx", "PKCS12",password);
 
     }
@@ -133,7 +132,7 @@ public class CertificateController{
         KeyStore sslKeyStore = KeyStore.getInstance(storeType, BC_PROVIDER);
         sslKeyStore.load(null, null);
         sslKeyStore.setKeyEntry(alias, keyPair.getPrivate(),null, new Certificate[]{certificate});
-        FileOutputStream keyStoreOs = new FileOutputStream("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\certs\\"+fileName);
+        FileOutputStream keyStoreOs = new FileOutputStream(System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+fileName);
         sslKeyStore.store(keyStoreOs, storePass.toCharArray());
     }
 
@@ -158,7 +157,7 @@ public class CertificateController{
         Calendar calendar = Calendar.getInstance(); // Get a Calendar instance
         calendar.add(Calendar.DAY_OF_YEAR, 7); // Add 7 days to the current date
         Date date = calendar.getTime(); // Convert Calendar to Date
-        File privateKeyFile = new File("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\private\\caDER.key");
+        File privateKeyFile = new File(System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"priv"+File.separator+"caDER.key");
         byte[] privateKeyBytes = Files.readAllBytes(privateKeyFile.toPath());
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
@@ -173,9 +172,6 @@ public class CertificateController{
         System.out.println(existingCRL);
         Set<? extends java.security.cert.X509CRLEntry> revokedCertificates = existingCRL.getRevokedCertificates();
 
-
-
-        //X509CRLHolder existingCRL = new X509CRLHolder(inputCRL);
         // Create a new CRL builder
         X509v2CRLBuilder crlBuilder = new X509v2CRLBuilder(crlHolder.getIssuer(), new Date());
         // Create a new CRL entry for the revoked certificate
@@ -206,28 +202,23 @@ public class CertificateController{
         }
 
         // Optionally, write the DER-encoded data to a file
-        OutputStream outputStream = new FileOutputStream("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\crl\\CRL1.crl");
+        OutputStream outputStream = new FileOutputStream(System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"crl"+File.separator+"CRL1.crl");
         outputStream.write(derData);
         outputStream.close();
     }
-
-
-
-
-
 
     public void unrevokeCert(X509Certificate userCert)throws Exception{
         Security.addProvider(new BouncyCastleProvider());
         Security.addProvider(
                 new BouncyCastleProvider());
 
-        File privateKeyFile = new File("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\private\\caDER.key");
+        File privateKeyFile = new File(System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"priv"+File.separator+"caDER.key");
         byte[] privateKeyBytes = Files.readAllBytes(privateKeyFile.toPath());
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
         PrivateKey priv = keyFactory.generatePrivate(privateKeySpec);
 
-        File crlFile2 = new File("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\crl\\CRL1.crl");
+        File crlFile2 = new File(System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"crl"+File.separator+"CRL1.crl");
         DataInputStream dataStream = new DataInputStream(new FileInputStream(crlFile2));
         X509CRL CRL2 = CertUtil.loadCRL(dataStream);
         DataInputStream dataStream2 = new DataInputStream(new FileInputStream(crlFile2));
@@ -265,7 +256,7 @@ public class CertificateController{
         }
 
         // Optionally, write the DER-encoded data to a file
-        OutputStream outputStream = new FileOutputStream("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\crl\\CRL1.crl");
+        OutputStream outputStream = new FileOutputStream(System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"crl"+File.separator+"CRL1.crl");
         outputStream.write(derData);
         outputStream.close();
         }
@@ -274,7 +265,7 @@ public class CertificateController{
 
     public void exportUpdatedCRL(X509CRL CRL)throws Exception{
         byte[] buf = CRL.getEncoded();
-        File fileCRL =  new File("C:\\Users\\admin\\IdeaProjects\\CryptoFileSystem\\root\\certs\\crl\\CRL.crl");
+        File fileCRL =  new File(System.getProperty("user.dir")+File.separator+"root"+File.separator+"certs"+File.separator+"crl"+File.separator+"CRL.crl");
         FileOutputStream os = new FileOutputStream(fileCRL);
         CertUtil.exportCRL(CRL,os);
         os.flush();
